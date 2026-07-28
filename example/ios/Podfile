@@ -43,8 +43,19 @@ post_install do |installer|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
-      # Suppress arm64 simulator warnings
-      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386'
+      # MLImage (via GoogleMLKit) ships arm64 device-only slices, no arm64
+      # simulator slice, so simulator builds on Apple Silicon must fall
+      # back to x86_64 (run under Rosetta).
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386 arm64'
     end
+  end
+
+  installer.aggregate_targets.each do |aggregate_target|
+    aggregate_target.user_project.native_targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386 arm64'
+      end
+    end
+    aggregate_target.user_project.save
   end
 end
