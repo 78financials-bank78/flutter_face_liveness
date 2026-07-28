@@ -7,5 +7,4 @@ ${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework
 ${BUILT_PRODUCTS_DIR}/camera_avfoundation/camera_avfoundation.framework
 ${BUILT_PRODUCTS_DIR}/flutter_face_liveness/flutter_face_liveness.framework
 ${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework
-${BUILT_PRODUCTS_DIR}/path_provider_foundation/path_provider_foundation.framework
 ${BUILT_PRODUCTS_DIR}/shared_preferences_foundation/shared_preferences_foundation.framework

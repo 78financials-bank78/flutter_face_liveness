@@ -10,7 +10,6 @@
 #endif
 #endif
 
-#import "GoogleMlKitFaceDetectionPlugin.h"
 
 FOUNDATION_EXPORT double google_mlkit_face_detectionVersionNumber;
 FOUNDATION_EXPORT const unsigned char google_mlkit_face_detectionVersionString[];
