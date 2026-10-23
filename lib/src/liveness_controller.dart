@@ -7,24 +7,24 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'analysis/face_geometry_analyzer.dart';
+import 'analysis/optical_flow_analyzer.dart';
+import 'analysis/replay_analyzer.dart';
+import 'analysis/screen_artifact_detector.dart';
+import 'camera/camera_service.dart';
+import 'identity/face_identity_service.dart';
+import 'liveness/liveness_engine.dart';
+import 'ml/face_detector_service.dart';
+import 'ml/tflite_model_downloader.dart';
+import 'ml/tflite_service.dart';
+import 'ml/video_replay_model_downloader.dart';
+import 'models/detection_status.dart';
 import 'models/face_data.dart';
 import 'models/face_mesh_data.dart';
+import 'models/frame_quality.dart';
 import 'models/liveness_action.dart';
 import 'models/liveness_config.dart';
 import 'models/liveness_result.dart';
-import 'models/detection_status.dart';
-import 'models/frame_quality.dart';
-import 'camera/camera_service.dart';
-import 'ml/face_detector_service.dart';
-import 'ml/tflite_service.dart';
-import 'ml/tflite_model_downloader.dart';
-import 'ml/video_replay_model_downloader.dart';
-import 'liveness/liveness_engine.dart';
-import 'identity/face_identity_service.dart';
-import 'analysis/replay_analyzer.dart';
-import 'analysis/screen_artifact_detector.dart';
-import 'analysis/optical_flow_analyzer.dart';
-import 'analysis/face_geometry_analyzer.dart';
 
 /// ChangeNotifier that drives the full liveness verification session.
 ///
