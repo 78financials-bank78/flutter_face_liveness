@@ -30,6 +30,7 @@ Production-ready AI-powered Flutter SDK for **real-time face liveness detection,
 - [Performance](#performance)
 - [Lighting & Brightness](#lighting--brightness)
 - [Security](#security)
+- [Minification & Obfuscation](#minification--obfuscation)
 - [Example App](#example-app)
 - [Changelog](#changelog)
 
@@ -916,6 +917,94 @@ config: LivenessConfig(
 | Identity spoofing | FaceNet cosine similarity + `isFaceIdNew` flag |
 
 > For high-assurance KYC (banking, government), pair `sessionId` and `faceId` with a server-side signature step.
+
+---
+
+## Minification & Obfuscation
+
+For enterprise, fintech, and banking deployments, maximum code shrinking and reverse-engineering resistance are paramount. `flutter_face_liveness` is engineered to achieve top security analysis scores (e.g. MobSF, Ostorlab, Oversecured) without runtime reflection crashes.
+
+### Built-in Consumer Proguard Rules (Android)
+
+When you add `flutter_face_liveness` to your app, its bundled `consumerProguardFiles` are automatically injected into your release build. These rules:
+- Keep only the necessary Flutter engine plugin registration constructor.
+- Allow full R8 minification, renaming, and dead-code stripping for all plugin classes.
+- Safely protect TensorFlow Lite JNI and Dart FFI native bridge methods (`-keepclasseswithmembernames class * { native <methods>; }`).
+- Suppress noisy false-positive warnings for CameraX and Google ML Kit.
+
+### Recommended App-Level Configuration (Android)
+
+In your app's `android/app/build.gradle`:
+```groovy
+android {
+    ...
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            ndk {
+                debugSymbolLevel 'NONE'
+            }
+        }
+    }
+}
+```
+
+In your app's `android/app/proguard-rules.pro`, add package flattening and log stripping:
+```proguard
+# Flatten package hierarchy for high obfuscation score
+-repackageclasses ''
+-allowaccessmodification
+-mergeinterfacesaggressively
+-overloadaggressively
+
+# Disguise source file structure
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+
+# Strip debug logging statements in release builds
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int d(...);
+    public static int i(...);
+    public static int w(...);
+}
+```
+
+In your `android/gradle.properties`:
+```properties
+android.enableR8.fullMode=true
+```
+
+### Full Dart AOT Obfuscation (Android & iOS)
+
+Dart code is compiled ahead-of-time (AOT) into `libapp.so` (Android) or `App.framework` (iOS). All background compute and worker isolate entry points (`_processFrame`, `_tfliteWorker`, `_runPreprocess`) are protected with `@pragma('vm:entry-point')` so they survive aggressive AOT tree-shaking and renaming.
+
+Build your production release using `--obfuscate` and `--split-debug-info`:
+```bash
+# Android App Bundle (Google Play)
+flutter build appbundle --release --obfuscate --split-debug-info=build/app/outputs/symbols
+
+# Android APK
+flutter build apk --release --obfuscate --split-debug-info=build/app/outputs/symbols
+
+# iOS Archive (App Store)
+flutter build ipa --release --obfuscate --split-debug-info=build/app/outputs/symbols
+```
+
+Or run the automated helper script:
+```bash
+bash scripts/build_obfuscated.sh [apk|appbundle]
+```
+
+### De-obfuscating Crash Reports
+If an unhandled exception occurs in production, stack traces will show obfuscated symbol identifiers. Restore human-readable traces using:
+```bash
+flutter symbolize -i <obfuscated_stack_trace.txt> -d build/app/outputs/symbols
+```
 
 ---
 

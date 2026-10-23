@@ -455,8 +455,9 @@ class LivenessController extends ChangeNotifier {
       // Signal 1: temporal brightness variance (secondary — AEC can neutralise this)
       final b = _faceCropBrightness(rawForTflite, faceForTflite.boundingBox);
       _faceCropBrightnessHistory.add(b);
-      if (_faceCropBrightnessHistory.length > 60)
+      if (_faceCropBrightnessHistory.length > 60) {
         _faceCropBrightnessHistory.removeAt(0);
+      }
       if (_faceCropBrightnessHistory.length >= 10) {
         final v = _faceCropBrightnessVariance();
         _liveHeuristicScore = (v / 0.0005).clamp(0.0, 1.0);
@@ -470,8 +471,9 @@ class LivenessController extends ChangeNotifier {
       final lap =
           _faceCropLaplacianVariance(rawForTflite, faceForTflite.boundingBox);
       _faceCropLaplacianHistory.add(lap);
-      if (_faceCropLaplacianHistory.length > 60)
+      if (_faceCropLaplacianHistory.length > 60) {
         _faceCropLaplacianHistory.removeAt(0);
+      }
       if (_faceCropLaplacianHistory.isNotEmpty) {
         _liveLaplacianScore =
             _faceCropLaplacianHistory.reduce((a, b) => a + b) /

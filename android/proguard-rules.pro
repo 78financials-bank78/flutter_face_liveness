@@ -1,11 +1,27 @@
-# ML Kit Face Detection
--keep class com.google.mlkit.** { *; }
--keep class com.google.android.gms.internal.mlkit_vision_face.** { *; }
--dontwarn com.google.mlkit.**
+# ==============================================================================
+# Flutter Face Liveness - Consumer ProGuard / R8 Rules
+# Injected into consuming applications to enable maximum minification & obfuscation
+# ==============================================================================
 
-# Camera2
--keep class androidx.camera.** { *; }
+# Keep Flutter plugin registration entry point for reflection
+-keep public class com.cerisetechsolutions.flutter_face_liveness.FlutterFaceLivenessPlugin {
+    public <init>();
+}
+
+# Preserve native method declarations for Dart FFI and JNI bindings
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+# TensorFlow Lite (JNI & C API runtime)
+-keep class org.tensorflow.lite.** { *; }
+-dontwarn org.tensorflow.lite.**
+
+# Google ML Kit Vision & Face Detection
+-dontwarn com.google.mlkit.**
+-dontwarn com.google.android.gms.**
+-dontwarn com.google.android.gms.internal.mlkit_vision_face.**
+
+# AndroidX Camera
 -dontwarn androidx.camera.**
 
-# Keep the plugin class
--keep class com.cerisetechsolutions.flutter_face_liveness.** { *; }

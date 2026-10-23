@@ -91,6 +91,7 @@ class _DisposeMsg {
 // Background isolate worker — owns the Interpreter, never blocks main thread
 // ══════════════════════════════════════════════════════════════════════════════
 
+@pragma('vm:entry-point')
 void _tfliteWorker(_InitMsg init) {
   final receivePort = ReceivePort();
   init.replyPort.send(receivePort.sendPort); // handshake step 1: give main our port
