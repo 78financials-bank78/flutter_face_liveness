@@ -41,6 +41,7 @@ class ProcessedFrame {
 
 // ── Top-level compute() function (runs in a background isolate) ────────────
 
+@pragma('vm:entry-point')
 ProcessedFrame _processFrame(_FrameInput input) {
   final width  = input.width;
   final height = input.height;

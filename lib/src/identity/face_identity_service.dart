@@ -528,6 +528,7 @@ class _PreprocessInput {
   final double? rightEyeY;
 }
 
+@pragma('vm:entry-point')
 Float32List? _runPreprocess(_PreprocessInput inp) =>
     FacePreprocessor.prepare(
       imageBytes: inp.imageBytes, imageWidth: inp.imageWidth,
